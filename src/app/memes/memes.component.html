@@ -1,0 +1,28 @@
+<div class="max-w-full h-[30rem] flex justify-center mt-14">
+  <div class="flex w-2/3">
+    <div class="w-2/12 flex justify-center items-center">
+      <button
+        (click)="showNextMeme(-1)"
+        class="bg-gray-400 rounded-[100%] py-5 px-7 font-bold"
+      >
+        <fa-icon [icon]="faArrowLeft"></fa-icon>
+      </button>
+    </div>
+    <div class="w-8/12 bg-white/10 backdrop-blur-md flex justify-center">
+      <img
+        [src]="activeMeme.url"
+        [alt]="activeMeme.name"
+        *ngIf="activeMeme"
+        class="max-h-full w-auto block"
+      />
+    </div>
+    <div class="w-2/12 flex justify-center items-center">
+      <button
+        (click)="showNextMeme(1)"
+        class="bg-gray-400 rounded-[100%] py-5 px-7 font-bold"
+      >
+        <fa-icon [icon]="faArrowRight"></fa-icon>
+      </button>
+    </div>
+  </div>
+</div>
