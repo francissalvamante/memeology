@@ -3,6 +3,7 @@ import { ApiService } from '../services/api.service';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { CacheService } from '../services/cache.service';
 
 interface Meme {
   id: string;
@@ -27,20 +28,32 @@ export class MemesComponent implements OnInit {
   memes: any = [];
   activeMeme: any;
   memePosition: number = Math.floor(Math.random() * 100);
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private cacheService: CacheService
+  ) {}
 
   ngOnInit(): void {
     this.loadMemes();
   }
 
   loadMemes() {
-    this.apiService.get('https://api.imgflip.com/get_memes').subscribe({
-      next: (response: { data: { memes: Meme[] } }) => {
+    const url = 'https://api.imgflip.com/get_memes';
+    this.cacheService
+      .cacheObservable(url, this.apiService.get(url))
+      .subscribe((response) => {
         this.memes = response.data.memes;
         this.activeMeme = this.memes[this.memePosition];
-      },
-      error: (error) => console.error('Error fetching memes:', error),
-    });
+      });
+
+    // No Caching logic
+    // this.apiService.get('https://api.imgflip.com/get_memes').subscribe({
+    //   next: (response: { data: { memes: Meme[] } }) => {
+    //     this.memes = response.data.memes;
+    //     this.activeMeme = this.memes[this.memePosition];
+    //   },
+    //   error: (error) => console.error('Error fetching memes:', error),
+    // });
   }
 
   showNextMeme(direction: number) {
